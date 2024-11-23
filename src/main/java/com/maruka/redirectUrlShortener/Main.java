@@ -10,6 +10,8 @@ public class Main implements RequestHandler<Map<String, Object>, Map<String, Str
 
         @Override
         public Map<String, String> handleRequest(Map<String, Object> input, Context context) {
+            String pathParameters = (String) input.get("rawPath");
+            String shortUrlCode = pathParameters.replace("/", "");
             return null;
         }
 
