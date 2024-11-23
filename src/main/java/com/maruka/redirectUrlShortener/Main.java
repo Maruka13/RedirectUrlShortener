@@ -8,10 +8,6 @@ import java.util.Map;
 
 public class Main implements RequestHandler<Map<String, Object>, Map<String, String>> {
 
-        public void handleRequest(){
-        System.out.println("Hello, World!");
-    }
-
         @Override
         public Map<String, String> handleRequest(Map<String, Object> input, Context context) {
             return null;
