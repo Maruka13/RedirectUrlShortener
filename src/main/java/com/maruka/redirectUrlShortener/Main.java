@@ -35,6 +35,8 @@ public class Main implements RequestHandler<Map<String, Object>, Map<String, Str
                 throw new RuntimeException("Error fetching data from s3: " + e.getMessage(), e);
             }
 
+            UrlData urlData;
+
             return null;
         }
 
