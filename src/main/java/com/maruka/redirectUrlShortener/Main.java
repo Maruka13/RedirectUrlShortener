@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Main implements RequestHandler<Map<String, Object>, Map<String, String>> {
+public class Main implements RequestHandler<Map<String, Object>, Map<String, Object>> {
 
         private final S3Client s3Client = S3Client.builder().build();
 
         private final ObjectMapper objectMapper = new ObjectMapper();
 
         @Override
-        public Map<String, String> handleRequest(Map<String, Object> input, Context context) {
+        public Map<String, Object> handleRequest(Map<String, Object> input, Context context) {
             String pathParameters = (String) input.get("rawPath");
             String shortUrlCode = pathParameters.replace("/", "");
 
@@ -44,12 +44,17 @@ public class Main implements RequestHandler<Map<String, Object>, Map<String, Str
             try {
                 urlData = objectMapper.readValue(s3objectStream, UrlData.class);
             } catch (Exception e) {
-                throw new RuntimeException("Error deserializing data: " + e.getMessage(), e);
+                throw new RuntimeException("Error deserializing URL data: " + e.getMessage(), e);
             }
 
             long currentTimeInSeconds = System.currentTimeMillis() / 1000;
             if (currentTimeInSeconds < urlData.getExpirationTime()) {
-                Map<String, String> response = new HashMap<>();
+                Map<String, Object> response = new HashMap<>();
+                response.put("statusCode", 302);
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Location", urlData.getOriginalUrl());
+                headers.put("headers", String.valueOf(headers));
+
                 return response;
             }
 
